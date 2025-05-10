@@ -1,0 +1,34 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subreddits",
+  "info": {
+    "singularName": "subreddit",
+    "pluralName": "subreddits",
+    "displayName": "subreddit"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "posts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::post.post",
+      "mappedBy": "subreddit"
+    }
+  }
+}
+
