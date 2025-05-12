@@ -2,10 +2,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #f8f9fa; /* Light background */
+    background-color: #f8f9fa; 
     padding: 10px 10px;
     border-bottom: 1px solid #e0e0e0;
-    height: 40px; /* Fixed navbar height */
+    height: 40px; 
 
 }
 
@@ -16,8 +16,8 @@
 }
 
 .navbar-logo-img {
-    width: 150px; /* Larger logo */
-    height: auto; /* Maintain aspect ratio */
+    width: 150px; 
+    height: auto; 
     object-fit: contain;
 }
 
