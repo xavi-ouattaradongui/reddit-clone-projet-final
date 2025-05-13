@@ -6,8 +6,8 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import CreateSubreddit from "./pages/CreateSubreddit";
 import EditSubreddit from "./pages/EditSubreddit";
-import CreatePost from "./pages/CreatePost"; // Ajouter le chemin pour CreatePost
-import EditPost from "./pages/EditPost"; // Ajouter le chemin pour EditPost
+import CreatePost from "./pages/CreatePost"; 
+import EditPost from "./pages/EditPost"; 
 
 
 function App() {
