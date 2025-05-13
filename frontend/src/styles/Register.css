@@ -1,0 +1,83 @@
+/* Page container */
+.register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+    padding: 150px;
+    box-sizing: border-box;
+}
+
+/* Colonne de gauche avec l'image */
+.register-left {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-left img {
+    max-width: 80%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Colonne de droite avec le formulaire */
+.register-container {
+    width: 400px;
+    margin: 80px auto;
+    padding: 2rem;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.register-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.register-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-container input {
+    padding: 12px;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+}
+
+.register-container button {
+    padding: 12px;
+    background-color: #0079d3;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.register-container button:hover {
+    background-color: #0079d3;
+}
+
+.register-container p {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.register-container a {
+    color: #0079d3;
+    text-decoration: none;
+}
