@@ -24,7 +24,7 @@ function Home() {
   }, []);
   const scrollToPost = (slug) => {
     if (postRefs.current[slug]) {
-      postRefs.current[slug].scrollIntoView({ behavior: "smooth" });  // Faire défiler jusqu’au post
+      postRefs.current[slug].scrollIntoView({ behavior: "smooth" });  
     }
   };
 
@@ -62,7 +62,8 @@ function Home() {
         documentId: post.documentId,
         slug: post.slug,
         comments: post.comments || [],
-        user: post.user?.username || "Anonyme", 
+        user: post.user ? post.user.username : "Anonyme",
+         
       }));
       setPosts(cleanPosts);
     } catch (err) {
@@ -146,10 +147,6 @@ function Home() {
       }
     }
   };
-
-  
-     // Référence pour chaque post
-  
    
 
   return (
@@ -189,12 +186,10 @@ function Home() {
           ) : (
             posts.map((post) => (
               <div key={post.id} ref={(el) => (postRefs.current[post.slug] = el)} className="post">
-                <p>
-                  <strong>{post.subreddit}</strong>
-                </p>
-                <p>
-                  <strong>Posté par :</strong> {post.user}
-                </p>
+                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                     <p><strong>{post.subreddit}</strong></p>
+                     <p>{post.user}</p>
+                 </div>
                 <h4>{post.title}</h4>
                 <p style={{ wordWrap: "break-word", whiteSpace: "normal" }}>{post.content?.slice(0, 100)}</p>
                 {post.image && (
@@ -216,6 +211,15 @@ function Home() {
                 </div>
 
                 <div className="post-comments">
+                <textarea
+                    placeholder="Ajouter un commentaire..."
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    rows={3}
+                  />
+                  <button onClick={() => handleCommentSubmit(post.documentId)}>
+                    Commenter
+                  </button>
                   <h5>Commentaires</h5>
                   {post.comments.length === 0 ? (
                     <p>Aucun commentaire pour l'instant.</p>
@@ -227,15 +231,7 @@ function Home() {
                       </div>
                     ))
                   )}
-                  <textarea
-                    placeholder="Ajouter un commentaire..."
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    rows={3}
-                  />
-                  <button onClick={() => handleCommentSubmit(post.documentId)}>
-                    Commenter
-                  </button>
+                  
                 </div>
               </div>
             ))
@@ -246,8 +242,8 @@ function Home() {
         <div className="home-sidebar">
           <div className="card">
             <h3>Home</h3>
-            <Link to="/create-post">Create Post</Link>
-            <Link to="/create-subreddit">Create Subreddit</Link>
+            <Link to="/create-post">Créer un Poste</Link>
+            <Link to="/create-subreddit">Créer un Subreddit</Link>
             <p style={{ marginTop: "10px" }}>
               Votre page d'accueil personnelle. Venez ici pour échanger
               avec vos communautés préférées.
@@ -260,7 +256,6 @@ function Home() {
 }
 
 export default Home;
-
 
 
 
