@@ -21,7 +21,7 @@
     object-fit: contain;
 }
 
-/* Centering the search bar */
+
 .navbar-center {
     flex: 1;
     display: flex;
