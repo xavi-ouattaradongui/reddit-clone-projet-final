@@ -59,7 +59,7 @@ function Navbar() {
     setQuery("");
     setResults([]);
     if (onSelectPost) {
-      onSelectPost(slug);  
+      onSelectPost(slug);  // Appeler la fonction scrollToPost
     }
   };
 
