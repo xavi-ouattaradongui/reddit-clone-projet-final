@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/CreatePostForm.css";
+import api from "../services/api";
 
 
 function CreatePostForm() {
@@ -19,7 +20,7 @@ function CreatePostForm() {
   useEffect(() => {
     const fetchSubreddits = async () => {
       try {
-        const res = await axios.get("http://localhost:1337/api/subreddits");
+        const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/subreddits");
         setSubreddits(res.data.data);
       } catch (err) {
         console.error("Erreur lors du chargement des subreddits", err);
@@ -44,7 +45,7 @@ function CreatePostForm() {
     const formData = new FormData();
     formData.append("files", file);
 
-    const res = await axios.post("http://localhost:1337/api/upload", formData, {
+    const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/upload", formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -82,9 +83,9 @@ function CreatePostForm() {
         },
       };
 
-      console.log("Post data:", postData); // Vérifiez les données du post avant l'envoi
+      console.log("Post data:", postData); 
 
-      const res = await axios.post("http://localhost:1337/api/posts", postData, {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/posts", postData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
