@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import { Link } from "react-router-dom";
 import "../styles/Home.css";
 import { useRef } from "react";
+import api from "../services/api";
 
 function Home() {
   const [user, setUser] = useState(null);
@@ -30,9 +31,7 @@ function Home() {
 
   const fetchSubreddits = async (token) => {
     try {
-      const res = await axios.get("http://localhost:1337/api/subreddits", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get(import.meta.env.VITE_BACKEND_URL + "/api/subreddits");
       const cleanData = res.data.data.map((sub) => ({
         id: sub.id,
         name: sub.name,
@@ -49,7 +48,7 @@ function Home() {
   const fetchPosts = async (token) => {
     try {
       const res = await axios.get(
-        "http://localhost:1337/api/posts?populate[image]=true&populate[user]=true&populate[comments][populate]=user&populate[subreddit]=true",
+          import.meta.env.VITE_BACKEND_URL + "/api/posts?populate[image]=true&populate[user]=true&populate[comments][populate]=user&populate[subreddit]=true",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -74,7 +73,7 @@ function Home() {
   const handleDeletePost = async (documentId) => {
     if (!window.confirm("Supprimer ce post ?")) return;
     try {
-      await axios.delete(`http://localhost:1337/api/posts/${documentId}`, {
+      await axios.delete(import.meta.env.VITE_BACKEND_URL + `/api/posts/${documentId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setPosts((prevPosts) =>
@@ -88,7 +87,7 @@ function Home() {
   const handleDeleteSubreddit = async (documentId) => {
     if (!window.confirm("Supprimer ce subreddit ?")) return;
     try {
-      await axios.delete(`http://localhost:1337/api/subreddits/${documentId}`, {
+      await axios.delete(import.meta.env.VITE_BACKEND_URL + `/api/subreddits/${documentId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setSubreddits((prevSubreddits) =>
@@ -103,7 +102,7 @@ function Home() {
     if (!commentText.trim()) return;
     try {
       const token = user.token;
-      const meRes = await axios.get("http://localhost:1337/api/users/me", {
+      const meRes = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const userId = meRes.data.id;
@@ -117,7 +116,7 @@ function Home() {
       };
 
       const res = await axios.post(
-        "http://localhost:1337/api/comments",
+        import.meta.env.VITE_BACKEND_URL + "/api/comments",
         commentData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

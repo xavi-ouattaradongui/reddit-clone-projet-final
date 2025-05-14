@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Register.css';
+import api from '../services/api';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -12,7 +13,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:1337/api/auth/local/register', {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + '/api/auth/local/register', {
         username,
         email,
         password,
@@ -28,12 +29,9 @@ function Register() {
 
   return (
     <div className="register-page">
-      {/* Colonne de gauche avec l'image */}
       <div className="register-left">
         <img src="/ザビ.21_3.png" alt="Logo" />
       </div>
-
-      {/* Colonne de droite avec l'image*/}
       <div className="register-container">
         <h2>Inscription</h2>
         <form onSubmit={handleSubmit}>
@@ -69,3 +67,4 @@ function Register() {
 }
 
 export default Register;
+

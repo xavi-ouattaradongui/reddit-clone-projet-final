@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/EditPost.css";
+import api from "../services/api"; 
 
 function EditPost() {
   const { documentId } = useParams();
@@ -27,7 +28,7 @@ function EditPost() {
 
     // Fetch subreddits
     axios
-      .get("http://localhost:1337/api/subreddits", {
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/subreddits", {
         headers: { Authorization: `Bearer ${jwt}` },
       })
       .then((res) => {
@@ -41,7 +42,7 @@ function EditPost() {
 
     // Fetch post details
     axios
-      .get(`http://localhost:1337/api/posts/${documentId}`, {
+      .get(import.meta.env.VITE_BACKEND_URL + `/api/posts/${documentId}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       })
       .then((res) => {
@@ -65,7 +66,7 @@ function EditPost() {
     const formData = new FormData();
     formData.append("files", file);
 
-    const res = await axios.post("http://localhost:1337/api/upload", formData, {
+    const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/upload", formData, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -83,43 +84,43 @@ function EditPost() {
   const handleReplacePost = async (e) => {
     e.preventDefault();
     const jwt = localStorage.getItem("jwt");
-
+  
     if (!title || !content || !selectedSubreddit) {
       alert("Tous les champs sont requis.");
       return;
     }
-
+  
     const slug = generateSlug(title);
-
+  
     try {
       if (!postId) {
         alert("Erreur : postId manquant.");
         return;
       }
-
+  
       let imageId = null;
       if (image instanceof File) {
         imageId = await uploadImage(image, jwt);
       }
-
+  
       const updatedPostData = {
         data: {
           title,
           content,
           subreddit: selectedSubreddit,
           slug,
-          ...(imageId && { image: imageId }),
+          ...(imageId && { image: imageId }), 
         },
       };
-
+  
       const updateResponse = await axios.put(
-        `http://localhost:1337/api/posts/${documentId}`,
+        import.meta.env.VITE_BACKEND_URL + `/api/posts/${documentId}`,
         updatedPostData,
         {
           headers: { Authorization: `Bearer ${jwt}` },
         }
       );
-
+  
       if (updateResponse.status === 200) {
         setSuccess(true);
       } else {
@@ -130,7 +131,7 @@ function EditPost() {
       alert("Une erreur est survenue. Veuillez réessayer.");
     }
   };
-
+  
   if (!loaded) return <p>Loading...</p>;
 
   return (
@@ -149,9 +150,7 @@ function EditPost() {
             onChange={(e) => setSelectedSubreddit(e.target.value)}
             required
           >
-            <option value="" disabled>
-              Sélectionner un subreddit
-            </option>
+            <option value="" disabled>Sélectionner un subreddit</option>
             {subreddits.map((sub) => (
               <option key={sub.id} value={sub.id}>
                 {sub.name}
@@ -166,22 +165,25 @@ function EditPost() {
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-
+  
           <label>Contenu</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
           />
-
+  
           <label>Image (optionnelle)</label>
-          <input type="file" onChange={(e) => setImage(e.target.files[0])} />
-
+          <input
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+  
           <button type="submit">Mettre à jour le post</button>
         </form>
       )}
     </div>
-  );
+  );  
 }
 
 export default EditPost;

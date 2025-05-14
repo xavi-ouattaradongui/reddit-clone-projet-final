@@ -1,5 +1,4 @@
 // src/pages/CreateSubreddit.jsx
-
 import SubredditForm from "../components/SubredditForm";
 
 function CreateSubreddit() {

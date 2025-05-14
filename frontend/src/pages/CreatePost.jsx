@@ -1,5 +1,4 @@
 import CreatePostForm from "../components/CreatePostForm";
-
 function CreatePost() {
   return (
     <div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
-import "../styles/SubredditForm.css"; // Assurez-vous d'importer le fichier CSS
+import "../styles/SubredditForm.css"
+import api from "../services/api";
 
 function SubredditForm() {
   const [name, setName] = useState("");
@@ -14,7 +15,7 @@ function SubredditForm() {
 
     try {
       await axios.post(
-        "http://localhost:1337/api/subreddits",
+        import.meta.env.VITE_BACKEND_URL + "/api/subreddits",
         {
           data: {
             name: subredditName,
@@ -47,7 +48,7 @@ function SubredditForm() {
           onChange={(e) => setName(e.target.value)}
           required
         />
-
+       
         <button type="submit">Créer</button>
       </form>
       {success && (
@@ -61,3 +62,5 @@ function SubredditForm() {
 }
 
 export default SubredditForm;
+
+

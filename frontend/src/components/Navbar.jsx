@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Navbar.css";
+import api from "../services/api";
 
 function Navbar() {
   const [query, setQuery] = useState("");
@@ -19,7 +20,7 @@ function Navbar() {
     const fetchResults = async () => {
       if (query.trim().length > 0) {
         try {
-          const res = await axios.get(`http://localhost:1337/api/posts?filters[slug][$containsi]=${query}`);
+          const res = await axios.get(import.meta.env.VITE_BACKEND_URL + `/api/posts?filters[slug][$containsi]=${query}`);
           setResults(res.data.data);
         } catch (err) {
           console.error("Erreur lors de la recherche :", err);
@@ -39,7 +40,7 @@ function Navbar() {
       const token = localStorage.getItem("jwt");
       if (token) {
         try {
-          const res = await axios.get("http://localhost:1337/api/users/me", {
+          const res = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/users/me", {
             headers: {
               Authorization: `Bearer ${token}`,
             },

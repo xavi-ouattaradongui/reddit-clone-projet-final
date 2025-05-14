@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css";
+import api from "../services/api";
+
 
 function Login({ setUser }) {
   const [identifier, setIdentifier] = useState("");
@@ -11,11 +13,13 @@ function Login({ setUser }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:1337/api/auth/local", {
+      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/auth/local", {
         identifier,
         password,
       });
+      console.log(res.data);
       localStorage.setItem("jwt", res.data.jwt);
+      localStorage.setItem("user", JSON.stringify(res.data.user)); // Stocker l'ID de l'utilisateur
       setUser({ token: res.data.jwt });
       navigate("/home");
     } catch (err) {
@@ -26,12 +30,9 @@ function Login({ setUser }) {
 
   return (
     <div className="login-page">
-      {/* Left column with the image */}
       <div className="login-left">
         <img src="/ザビ.21_3.png" alt="Logo" />
       </div>
-
-      {/* Right column with the form */}
       <div className="login-container">
         <h2>Connexion</h2>
         <form onSubmit={handleLogin}>

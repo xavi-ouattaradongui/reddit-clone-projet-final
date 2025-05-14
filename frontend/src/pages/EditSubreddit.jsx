@@ -2,7 +2,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import "../styles/EditSubreddit.css"; 
+import "../styles/EditSubreddit.css";
+import api from "../services/api"; 
 
 function EditSubreddit() {
   const { id } = useParams();
@@ -19,7 +20,7 @@ function EditSubreddit() {
     }
 
     axios
-      .get(`http://localhost:1337/api/subreddits/${id}`, {
+      .get(import.meta.env.VITE_BACKEND_URL + `/api/subreddits/${id}`, {
         headers: { Authorization: `Bearer ${jwt}` },
       })
       .then((res) => {
@@ -47,7 +48,7 @@ function EditSubreddit() {
 
     try {
       await axios.put(
-        `http://localhost:1337/api/subreddits/${id}`,
+        import.meta.env.VITE_BACKEND_URL + `/api/subreddits/${id}`,
         {
           data: {
             name: subredditName,

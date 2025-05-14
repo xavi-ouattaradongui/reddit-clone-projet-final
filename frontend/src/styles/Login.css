@@ -7,24 +7,24 @@
     background-color: #f0f2f5;
     padding: 150px;
     box-sizing: border-box;
-}
-
-/* Colonne de gauche avec la vidéo */
-.login-left {
+  }
+  
+  /* Colonne de gauche avec la vidéo */
+  .login-left {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.login-left img {
+  }
+  
+  .login-left img {
     max-width: 80%;
     height: auto;
     border-radius: 10px;
-}
-
-/* Colonne de droite avec le formulaire */
-.login-container {
+  }
+  
+  /* Colonne de droite avec le formulaire */
+  .login-container {
     width: 400px;
     margin: 80px auto;
     padding: 2rem;
@@ -33,29 +33,29 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     text-align: center;
     font-family: Arial, sans-serif;
-}
-
-.login-container h2 {
+  }
+  
+  .login-container h2 {
     text-align: center;
     margin-bottom: 1rem;
     font-size: 1.5rem;
     font-weight: 600;
-}
-
-.login-container form {
+  }
+  
+  .login-container form {
     display: flex;
     flex-direction: column;
-}
-
-.login-container input {
+  }
+  
+  .login-container input {
     padding: 12px;
     margin-bottom: 12px;
     font-size: 1rem;
     border: 1px solid #dddfe2;
     border-radius: 6px;
-}
-
-.login-container button {
+  }
+  
+  .login-container button {
     padding: 12px;
     background-color: #0079d3;
     color: white;
@@ -65,19 +65,20 @@
     cursor: pointer;
     margin-bottom: 10px;
     font-size: 1rem;
-}
-
-.login-container button:hover {
+  }
+  
+  .login-container button:hover {
     background-color: #0079d3;
-}
-
-.login-container p {
+  }
+  
+  .login-container p {
     text-align: center;
     margin-top: 10px;
     font-size: 0.9rem;
-}
-
-.login-container a {
+  }
+  
+  .login-container a {
     color: #0079d3;
     text-decoration: none;
-}
+  }
+  
