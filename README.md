@@ -108,8 +108,8 @@ Il n'y a **pas de serveur à maintenir** : le frontend parle directement à Supa
 ### 1. Récupérer le projet
 
 ```bash
-git clone https://github.com/xavi-ouattaradongui/Projet-Final.git
-cd Projet-Final
+git clone https://github.com/xavi-ouattaradongui/reddit-clone-projet-final.git
+cd reddit-clone-projet-final
 npm install
 ```
 
@@ -157,11 +157,11 @@ Le site est disponible sur <http://localhost:5173>.
 ## Déploiement sur Vercel
 
 1. Pousse le projet sur GitHub.
-2. Sur [vercel.com](https://vercel.com), clique sur **Add New → Project** et importe le dépôt `Projet-Final`.
+2. Sur [vercel.com](https://vercel.com), clique sur **Add New → Project** et importe le dépôt `reddit-clone-projet-final`.
 3. Vercel détecte Vite tout seul (commande `npm run build`, dossier `dist`).
 4. Dans **Environment Variables**, ajoute `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY`.
 5. Clique sur **Deploy**.
-6. Dans Supabase, va dans **Authentication → URL Configuration** et mets l'adresse Vercel (par ex. `https://projet-final.vercel.app`) dans **Site URL**, pour que les liens des emails de confirmation pointent vers le bon site.
+6. Dans Supabase, va dans **Authentication → URL Configuration** et mets l'adresse Vercel (par ex. `https://reddit-clone-projet-final.vercel.app`) dans **Site URL**, pour que les liens des emails de confirmation pointent vers le bon site.
 
 Chaque `git push` sur la branche principale redéploie le site automatiquement. Le fichier `vercel.json` permet d'ouvrir directement une URL comme `/r/dev`.
 
