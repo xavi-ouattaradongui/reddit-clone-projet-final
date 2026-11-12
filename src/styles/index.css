@@ -699,8 +699,8 @@ input:disabled {
 .about-banner,
 .sub-banner {
   height: 34px;
-  background-color: #0079d3;
-  background-image: linear-gradient(120deg, #3a4a44 0%, #1d5c45 55%, #183b2c 100%);
+  background-color: #1c1c1c;
+  background-image: linear-gradient(115deg, #1c1c1c 0%, #2d2d2f 55%, #ff4500 140%);
   background-size: cover;
   background-position: center;
 }
@@ -1469,15 +1469,24 @@ input:disabled {
   place-items: center;
   align-content: center;
   gap: 1rem;
-  background: radial-gradient(circle at 30% 40%, #2a3a34, #0d1512 75%);
-  color: #cfe9de;
+  background: radial-gradient(circle at 30% 35%, #2b2b2d, #0b0b0b 75%);
+  color: #d7dadc;
   padding: 2rem;
   order: 0;
 }
 .auth-visual img {
-  width: min(300px, 80%);
-  border-radius: 24px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  width: min(160px, 50%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.06), 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.auth-visual .auth-brand {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: #fff;
+}
+.auth-brand b {
+  color: #ff4500;
 }
 .auth-visual p {
   font-size: 16px;

@@ -54,7 +54,7 @@ export default function Home() {
           <div className="about-banner" />
           <div className="about-body">
             <div className="home-title">
-              <img src="/favicon.png" alt="" />
+              <img src="/logo.svg" alt="" />
               <h3>{user ? `Salut ${profile?.username ?? ''} 👋` : 'Accueil'}</h3>
             </div>
             <p className="muted">

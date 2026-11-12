@@ -40,7 +40,7 @@ export default function Navbar({ onMenu }) {
       </button>
 
       <Link to="/" className="brand">
-        <img src="/favicon.png" alt="" />
+        <img src="/logo.svg" alt="" />
         <span>
           ザビ<b>21_3</b>
         </span>

@@ -6,7 +6,10 @@ export default function AuthLayout({ title, subtitle, children }) {
   return (
     <div className="auth-page">
       <div className="auth-visual">
-        <img src="/logo.jpg" alt="ザビ21_3" />
+        <img src="/logo.svg" alt="" />
+        <p className="auth-brand">
+          ザビ<b>21_3</b>
+        </p>
         <p>Partage. Vote. Discute.</p>
       </div>
       <div className="auth-panel">

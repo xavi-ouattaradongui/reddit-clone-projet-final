@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/favicon.png" width="72" alt="logo" />
+<img src="public/logo.svg" width="72" alt="logo" />
 
 # ザビ21_3
 
