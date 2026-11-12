@@ -1,140 +1,182 @@
-#  Projet Reddit Clone
+<div align="center">
 
-Un projet de clone de Reddit réalisé en équipe dans le cadre d’un projet pédagogique. Cette plateforme permet aux utilisateurs de créer et naviguer dans des subreddits, de publier et commenter des posts.
+<img src="public/favicon.png" width="72" alt="logo" />
 
-##  Fonctionnalités
+# ザビ21_3
 
-###  Fonctionnalités principales
-- Authentification (inscription, connexion, déconnexion)
-- Création, édition et suppression de subreddits
-- Navigation par thématiques (subreddits)
-- Création, édition et suppression de posts (texte ou image)
-- Ajout de commentaires aux posts
-- Recherche de posts
+**Un clone de Reddit moderne : communautés, posts texte et image, votes et commentaires.**
 
-###  Fonctionnalités bonus (optionnelles)
-- Support d'images via Strapi Media Library
-- Recherches avec filtrage intelligent
+React 19 · Vite · Supabase (PostgreSQL, Auth, Storage) · déployé sur Vercel
 
-##  Stack technique
+</div>
 
-### Backend
-- [Strapi](https://strapi.io/) — CMS Headless utilisé comme API principale
-- [Neon](https://neon.tech/) — Base de données PostgreSQL serverless
-- Gestion des modèles : Utilisateurs, Subreddits, Posts, Commentaires
+---
 
-### Frontend
-- [React](https://reactjs.org/) + [Vite](https://vitejs.dev/) — SPA rapide et moderne
-- [Axios](https://axios-http.com/) — Requêtes HTTP vers l’API Strapi
-- [Liveblocks](https://liveblocks.io/) — Fonctionnalité de collaboration en temps réel
+## Sommaire
 
-## Installation et lancement
+- [Fonctionnalités](#fonctionnalités)
+- [Stack technique](#stack-technique)
+- [Structure du projet](#structure-du-projet)
+- [Installation en local](#installation-en-local)
+- [Déploiement sur Vercel](#déploiement-sur-vercel)
+- [Base de données](#base-de-données)
+- [Équipe](#équipe)
+
+## Fonctionnalités
+
+**Comptes**
+- Inscription avec pseudo, connexion et déconnexion (Supabase Auth)
+- Profil public `/u/pseudo` : photo, bio, date d'inscription, liste des posts
+- Modification de sa photo de profil et de sa bio
+
+**Communautés**
+- Création, modification et suppression d'une communauté (seulement par son créateur)
+- Page de chaque communauté `/r/nom` avec son fil de posts
+- Annuaire de toutes les communautés
+
+**Posts**
+- Création d'un post avec un texte, une image (glisser-déposer, 5 Mo max) ou les deux
+- Modification et suppression par l'auteur (l'image est aussi supprimée du stockage)
+- Votes positifs et négatifs, avec mise à jour immédiate du score
+- Tri « Nouveaux » / « Top » et pagination (« Charger plus »)
+- Recherche plein texte dans les titres et le contenu
+
+**Commentaires**
+- Ajout de commentaires (raccourci ⌘/Ctrl + Entrée)
+- Suppression de ses propres commentaires
+
+**Interface**
+- Design entièrement refait, thème sombre et clair (mémorisé)
+- Responsive : menu latéral escamotable sur mobile
+- Messages d'erreur clairs en français, notifications au lieu des `alert()`
+- Lecture possible sans compte, écriture réservée aux membres connectés
+
+## Stack technique
+
+| Partie | Outil | Rôle |
+|---|---|---|
+| Frontend | [React 19](https://react.dev) + [Vite](https://vitejs.dev) | Application monopage |
+| Navigation | [React Router 7](https://reactrouter.com) | Pages et URL |
+| Backend | [Supabase](https://supabase.com) | Base PostgreSQL, authentification, stockage des images, API automatique |
+| Sécurité | Row Level Security (PostgreSQL) | Chacun ne peut modifier que ses propres données |
+| Hébergement | [Vercel](https://vercel.com) | Déploiement automatique à chaque push |
+
+Il n'y a **pas de serveur à maintenir** : le frontend parle directement à Supabase avec la clé publique, et les règles de sécurité sont appliquées par la base de données elle-même.
+
+## Structure du projet
+
+```
+├── index.html
+├── public/                 logo, favicon, avatar par défaut
+├── supabase/
+│   ├── schema.sql          tables, vue, sécurité, stockage (à exécuter une fois)
+│   └── seed.sql            communautés de départ (optionnel)
+├── src/
+│   ├── main.jsx            point d'entrée
+│   ├── App.jsx             liste des routes
+│   ├── lib/
+│   │   ├── supabase.js     client Supabase
+│   │   ├── api.js          toutes les requêtes (posts, votes, commentaires…)
+│   │   ├── utils.js        dates relatives, messages d'erreur…
+│   │   └── useTheme.js     thème clair / sombre
+│   ├── context/            AuthContext (session), ToastContext (notifications)
+│   ├── components/         Navbar, Layout, PostCard, Feed, VoteButtons, Comments…
+│   ├── pages/              Home, SubredditPage, PostPage, PostEditor, Profile…
+│   └── styles/index.css    toute la feuille de style
+├── vercel.json             redirection des URL vers l'application
+└── .env.example            modèle des variables d'environnement
+```
+
+## Installation en local
 
 ### Prérequis
-- Node.js 
-- Un compte Neon
-- Strapi (installé globalement ou via `npx create-strapi-app`)
 
-### Installation
+- [Node.js](https://nodejs.org) 18.18 ou plus récent (`node -v` pour vérifier)
+- Un compte [Supabase](https://supabase.com) (gratuit)
 
-1. **Cloner le dépôt**
-   ```bash
-   git clone https://github.com/xavi-ouattaradongui/Projet-Final.git
-   cd Projet-Final
+### 1. Récupérer le projet
 
-2. **Lancer le backend**
-- cd my-strapi-project
-- npm install
-- npm run dev
+```bash
+git clone https://github.com/xavi-ouattaradongui/Projet-Final.git
+cd Projet-Final
+npm install
+```
 
-2. **Lancer le frontend**
-- cd my-strapi-project
-- npm install
-- npm run dev
+### 2. Créer la base Supabase
 
-##  Équipe et répartition des tâches
+1. Sur [supabase.com](https://supabase.com), crée un projet (région conseillée : *Paris*).
+2. Ouvre **SQL Editor → New query**, colle le contenu de [`supabase/schema.sql`](supabase/schema.sql) et clique sur **Run**.
+3. *(Optionnel)* Fais de même avec [`supabase/seed.sql`](supabase/seed.sql) pour avoir quelques communautés de départ.
+4. *(Conseillé en développement)* Dans **Authentication → Sign In / Providers → Email**, désactive **Confirm email** pour pouvoir te connecter tout de suite après l'inscription.
 
-### Équipe
+### 3. Configurer les variables d'environnement
 
-- OUATTARA Dongui
-- HOVOR Fara
-- DAHMOUNE amelie
-- BAKOUCHE Samy
+Copie le modèle :
 
-### Répartition des tâches
+```bash
+cp .env.example .env.local
+```
 
-- OUATTARA Dongui  — Backend Strapi & BDD
+Puis remplis les deux valeurs depuis **Project Settings → API** :
 
-    Installation et configuration de Strapi
+```env
+VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+VITE_SUPABASE_ANON_KEY=ta-cle-anon-publique
+```
 
-    Connexion à la base PostgreSQL Neon
+> La clé `anon` (ou *publishable*) est faite pour être utilisée dans le navigateur.
+> Ne mets **jamais** la clé `service_role` / `secret` dans ce projet.
 
-    Création des modèles : Users, Subreddits, Posts, Comments
+### 4. Lancer
 
-    Mise en place des rôles, permissions, et relations entre modèles
+```bash
+npm run dev
+```
 
-- HOVOR Fara et OUATTARA Dongui — Frontend UI & Auth
+Le site est disponible sur <http://localhost:5173>.
 
-    Mise en place du projet React + Vite
+| Commande | Effet |
+|---|---|
+| `npm run dev` | Serveur de développement avec rechargement à chaud |
+| `npm run build` | Version optimisée pour la production, dans `dist/` |
+| `npm run preview` | Tester localement la version de production |
+| `npm run lint` | Vérifier le code avec ESLint |
 
-    Pages : Auth (login, register), Accueil
+## Déploiement sur Vercel
 
-    Intégration des appels API avec Axios
+1. Pousse le projet sur GitHub.
+2. Sur [vercel.com](https://vercel.com), clique sur **Add New → Project** et importe le dépôt `Projet-Final`.
+3. Vercel détecte Vite tout seul (commande `npm run build`, dossier `dist`).
+4. Dans **Environment Variables**, ajoute `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY`.
+5. Clique sur **Deploy**.
+6. Dans Supabase, va dans **Authentication → URL Configuration** et mets l'adresse Vercel (par ex. `https://projet-final.vercel.app`) dans **Site URL**, pour que les liens des emails de confirmation pointent vers le bon site.
 
-- OUATTARA Dongui et BAKOUCHE Samy — Intégration Strapi ↔ React
+Chaque `git push` sur la branche principale redéploie le site automatiquement. Le fichier `vercel.json` permet d'ouvrir directement une URL comme `/r/dev`.
 
-    Connexion des données Strapi dans React
+## Base de données
 
-    Routage dynamique (slug) et navigation
+```
+auth.users (géré par Supabase)
+   │ 1
+   ▼ 1
+profiles ──────────┐
+   │ créateur      │ auteur
+   ▼               ▼
+subreddits ──1:n── posts ──1:n── comments
+                     │
+                     └──1:n── votes (+1 / -1, un par personne)
+```
 
-    Gestion des fichiers (images) via Strapi Media Library
+- **`post_feed`** est une vue qui renvoie chaque post avec le nom de sa communauté, le pseudo de l'auteur, le score et le nombre de commentaires.
+- Un **trigger** crée automatiquement le profil à l'inscription.
+- Les **règles RLS** permettent à tout le monde de lire, mais seul l'auteur peut modifier ou supprimer son contenu.
+- Les images sont stockées dans le bucket public **`post-images`**, dans un dossier par utilisateur.
 
-    Composants d’interface (Navbar)
+## Équipe
 
-- DAHMOUNE amelie et OUATTARA dongui  — Fonctionnalité, Intégration Strapi ↔ React
+Projet réalisé par :
 
-    Gestion des formulaires CRUD (posts, subreddits)
+- **OUATTARA Dongui**
+- **HOVOR Fara**
 
-    Composants d’interface (CreatPostForm et SubrdditForm)
-
-    Tests de bout en bout des principales fonctionnalités
-
-    Déploiement du frontend et coordination de la soutenance
-
-- HOVOR Fara et DAHMOUNE amelie — Qualité de l’interface (design, ergonomie, UX)
-
-    mise en place d’un design cohérent et attrayant
-
-    organisation du projet et de la docmumentation 
-
-## Cahier des charges
-
-### Le projet respecte les exigences suivantes :
-
-    Strapi comme CMS/API
-
-    Neon comme base de données PostgreSQL
-
-    Application full-stack fonctionnelle avec authentification et gestion de contenu
-
-### Livrables
-
-    ✅ Application déployée
-
-    ✅ Code source disponible sur GitHub
-
-    ✅ Documentation claire (ce README)
-
-    
-
-### Licence
-
-    Ce projet est réalisé dans le cadre d’un exercice pédagogique. Aucune licence commerciale n’est associée.
-
-
-
-
-
-   
-
-    
+> **Historique :** la version 1 du projet utilisait Strapi Cloud. Elle a été entièrement réécrite avec Supabase pour la version 2. L'ancien code reste disponible dans l'historique Git (branche `main` avant la v2).
