@@ -8,6 +8,8 @@
 
 React 19 · Vite · Supabase (PostgreSQL, Auth, Storage) · déployé sur Vercel
 
+**🌐 Site en ligne : [zthread.vercel.app](https://zthread.vercel.app)**
+
 </div>
 
 ---
@@ -161,7 +163,7 @@ Le site est disponible sur <http://localhost:5173>.
 3. Vercel détecte Vite tout seul (commande `npm run build`, dossier `dist`).
 4. Dans **Environment Variables**, ajoute `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY`.
 5. Clique sur **Deploy**.
-6. Dans Supabase, va dans **Authentication → URL Configuration** et mets l'adresse Vercel (par ex. `https://reddit-clone-projet-final.vercel.app`) dans **Site URL**, pour que les liens des emails de confirmation pointent vers le bon site.
+6. Dans Supabase, va dans **Authentication → URL Configuration** et mets l'adresse Vercel (par ex. `https://zthread.vercel.app`) dans **Site URL**, pour que les liens des emails de confirmation pointent vers le bon site.
 
 Chaque `git push` sur la branche principale redéploie le site automatiquement. Le fichier `vercel.json` permet d'ouvrir directement une URL comme `/r/dev`.
 
