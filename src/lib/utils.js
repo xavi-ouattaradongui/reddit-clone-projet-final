@@ -34,6 +34,7 @@ export function friendlyError(error) {
 
   if (msg.includes('invalid login credentials')) return 'Email ou mot de passe incorrect.';
   if (msg.includes('email not confirmed')) return 'Confirme ton adresse email (regarde ta boîte mail) avant de te connecter.';
+  if (msg.includes('email address') && msg.includes('invalid')) return "Cette adresse email n'est pas acceptée. Utilise une vraie adresse.";
   if (msg.includes('user already registered')) return 'Un compte existe déjà avec cet email.';
   if (msg.includes('password should be at least')) return 'Le mot de passe doit faire au moins 6 caractères.';
   if (msg.includes('rate limit') || msg.includes('too many')) return 'Trop de tentatives. Réessaie dans quelques minutes.';
