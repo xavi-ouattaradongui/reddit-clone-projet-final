@@ -39,3 +39,12 @@ export const IconClock = make(<><circle cx="12" cy="12" r="9" /><path d="M12 7v5
 export const IconX = make(<path d="M18 6 6 18M6 6l12 12" />);
 export const IconMenu = make(<path d="M3 6h18M3 12h18M3 18h18" />);
 export const IconArrowLeft = make(<path d="M19 12H5M12 19l-7-7 7-7" />);
+export const IconShare = make(<><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7" /><path d="m16 6-4-4-4 4M12 2v13" /></>);
+export const IconBookmark = make(<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />);
+export const IconLink = make(<><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" /><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" /></>);
+export const IconReply = make(<><path d="m9 14-5-5 5-5" /><path d="M4 9h10a6 6 0 0 1 6 6v5" /></>);
+export const IconText = make(<><path d="M4 6h16M4 12h16M4 18h10" /></>);
+export const IconTrendUp = make(<><path d="m3 17 6-6 4 4 8-8" /><path d="M14 7h7v7" /></>);
+export const IconExternal = make(<><path d="M15 3h6v6M10 14 21 3" /><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></>);
+export const IconCake = make(<><path d="M4 21V11h16v10M2 21h20M7 11V8M12 11V8M17 11V8" /><path d="M7 4.5v.01M12 4.5v.01M17 4.5v.01" /></>);
+export const IconStar = make(<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z" />);

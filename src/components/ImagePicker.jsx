@@ -8,7 +8,7 @@ const TYPES = ['image/png', 'image/jpeg', 'image/gif', 'image/webp'];
  * Choix d'une image (clic ou glisser-déposer) avec aperçu.
  * value : { file?: File, url?: string } | null
  */
-export default function ImagePicker({ value, onChange, onError }) {
+export default function ImagePicker({ value, onChange, onError, compact = false }) {
   const input = useRef(null);
   const [drag, setDrag] = useState(false);
   const [preview, setPreview] = useState(value?.url || null);
@@ -31,7 +31,7 @@ export default function ImagePicker({ value, onChange, onError }) {
 
   if (preview) {
     return (
-      <div className="image-preview">
+      <div className={`image-preview ${compact ? 'compact' : ''}`}>
         <img src={preview} alt="Aperçu" />
         <button type="button" className="icon-btn remove-image" onClick={() => onChange(null)} aria-label="Retirer l'image">
           <IconX />
@@ -42,7 +42,7 @@ export default function ImagePicker({ value, onChange, onError }) {
 
   return (
     <div
-      className={`dropzone ${drag ? 'drag' : ''}`}
+      className={`dropzone ${drag ? 'drag' : ''} ${compact ? 'compact' : ''}`}
       onClick={() => input.current?.click()}
       onDragOver={(e) => {
         e.preventDefault();
@@ -60,7 +60,7 @@ export default function ImagePicker({ value, onChange, onError }) {
     >
       <IconImage size={28} />
       <p>
-        <strong>Glisse une image ici</strong> ou clique pour choisir
+        {compact ? <strong>Choisir une image</strong> : <><strong>Glisse une image ici</strong> ou clique pour choisir</>}
       </p>
       <small className="muted">PNG, JPG, GIF ou WEBP · 5 Mo max</small>
       <input

@@ -45,3 +45,27 @@ export function friendlyError(error) {
   if (msg.includes('exceeded the maximum allowed size') || msg.includes('payload too large')) return 'Image trop lourde (5 Mo maximum).';
   return error.message || 'Une erreur est survenue.';
 }
+
+/** « https://www.youtube.com/watch?v=… » → « youtube.com » */
+export function domainOf(url) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+}
+
+/** Copie l'adresse d'une page (ou ouvre le partage natif sur mobile). Renvoie true si copiée. */
+export async function shareLink(path, title) {
+  const url = window.location.origin + path;
+  if (navigator.share && /Mobi|Android/i.test(navigator.userAgent)) {
+    try {
+      await navigator.share({ title, url });
+      return false;
+    } catch {
+      /* annulé : on copie à la place */
+    }
+  }
+  await navigator.clipboard.writeText(url);
+  return true;
+}

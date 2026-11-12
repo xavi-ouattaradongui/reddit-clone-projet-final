@@ -18,7 +18,8 @@ export default function Avatar({ name, url, size = 32 }) {
 }
 
 /** Pastille de communauté (r/…) */
-export function SubIcon({ name, size = 32 }) {
+export function SubIcon({ name, url, size = 32 }) {
+  if (url) return <img className="avatar sub-icon" src={url} alt="" style={{ width: size, height: size }} />;
   return (
     <span
       className="avatar sub-icon"

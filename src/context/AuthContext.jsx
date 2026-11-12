@@ -14,7 +14,13 @@ export function AuthProvider({ children }) {
   const loadProfile = useCallback(async (userId) => {
     if (!userId) return setProfile(null);
     try {
-      setProfile(await getProfileById(userId));
+      const p = await getProfileById(userId);
+      // Compte supprimé entre-temps (ex. depuis Supabase) : on ferme la session locale
+      if (!p) {
+        await supabase.auth.signOut({ scope: 'local' });
+        setSession(null);
+      }
+      setProfile(p);
     } catch {
       setProfile(null);
     }

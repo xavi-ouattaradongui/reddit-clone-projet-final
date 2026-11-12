@@ -4,15 +4,24 @@ import { useAuth } from '../context/AuthContext';
 import { friendlyError } from '../lib/utils';
 import PostCard from './PostCard';
 import Spinner from './Spinner';
-import { IconClock, IconFlame } from './Icons';
+import { IconClock, IconFlame, IconTrendUp } from './Icons';
+
+const RANGES = [
+  ['day', "Aujourd'hui"],
+  ['week', 'Cette semaine'],
+  ['month', 'Ce mois-ci'],
+  ['year', 'Cette année'],
+  ['all', 'Depuis toujours'],
+];
 
 /**
- * Liste de posts paginée avec tri « Nouveaux » / « Top ».
- * filters : { subredditId?, authorId?, search? }
+ * Liste de posts paginée avec tri « Hot » / « Nouveaux » / « Top ».
+ * filters : { subredditId?, subredditIds?, postIds?, authorId?, search? }
  */
-export default function Feed({ filters = {}, hideSubreddit = false, empty }) {
+export default function Feed({ filters = {}, hideSubreddit = false, empty, defaultSort = 'hot', showSort = true }) {
   const { user } = useAuth();
-  const [sort, setSort] = useState('new');
+  const [sort, setSort] = useState(defaultSort);
+  const [range, setRange] = useState('week');
   const [posts, setPosts] = useState([]);
   const [votes, setVotes] = useState({});
   const [page, setPage] = useState(0);
@@ -21,15 +30,16 @@ export default function Feed({ filters = {}, hideSubreddit = false, empty }) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
 
-  const { subredditId, authorId, search } = filters;
+  // Les tableaux changent d'identité à chaque rendu : on compare leur contenu
+  const filtersKey = JSON.stringify(filters);
 
   const load = useCallback(
     async (pageToLoad) => {
-      const rows = await listPosts({ sort, subredditId, authorId, search, page: pageToLoad });
+      const rows = await listPosts({ ...JSON.parse(filtersKey), sort, range, page: pageToLoad });
       const myVotes = await getMyVotes(rows.map((p) => p.id), user?.id);
       return { rows, myVotes };
     },
-    [sort, subredditId, authorId, search, user?.id],
+    [filtersKey, sort, range, user?.id],
   );
 
   // (Re)chargement complet quand le tri ou les filtres changent
@@ -75,16 +85,30 @@ export default function Feed({ filters = {}, hideSubreddit = false, empty }) {
     setPosts((list) => list.map((p) => (p.id === postId ? { ...p, score } : p)));
   };
 
+  const tab = (key, Icon, label) => (
+    <button className={`pill ${sort === key ? 'active' : ''}`} onClick={() => setSort(key)} aria-pressed={sort === key}>
+      <Icon size={18} /> {label}
+    </button>
+  );
+
   return (
     <section className="feed">
-      <div className="sort-bar card">
-        <button className={`pill ${sort === 'new' ? 'active' : ''}`} onClick={() => setSort('new')}>
-          <IconClock size={18} /> Nouveaux
-        </button>
-        <button className={`pill ${sort === 'top' ? 'active' : ''}`} onClick={() => setSort('top')}>
-          <IconFlame size={18} /> Top
-        </button>
-      </div>
+      {showSort && (
+        <div className="sort-bar card">
+          {tab('hot', IconFlame, 'Hot')}
+          {tab('new', IconClock, 'Nouveaux')}
+          {tab('top', IconTrendUp, 'Top')}
+          {sort === 'top' && (
+            <select className="range-select" value={range} onChange={(e) => setRange(e.target.value)} aria-label="Période">
+              {RANGES.map(([v, l]) => (
+                <option key={v} value={v}>
+                  {l}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      )}
 
       {loading ? (
         <Spinner center />

@@ -38,15 +38,25 @@ React 19 · Vite · Supabase (PostgreSQL, Auth, Storage) · déployé sur Vercel
 - Création d'un post avec un texte, une image (glisser-déposer, 5 Mo max) ou les deux
 - Modification et suppression par l'auteur (l'image est aussi supprimée du stockage)
 - Votes positifs et négatifs, avec mise à jour immédiate du score
-- Tri « Nouveaux » / « Top » et pagination (« Charger plus »)
+- Pagination (« Charger plus »)
 - Recherche plein texte dans les titres et le contenu
 
 **Commentaires**
-- Ajout de commentaires (raccourci ⌘/Ctrl + Entrée)
-- Suppression de ses propres commentaires
+- Fils de discussion : répondre à un commentaire, réponses imbriquées, replier un fil
+- Votes sur les commentaires, tri Meilleurs / Récents / Anciens
+- Modification et suppression (un commentaire qui a des réponses devient « [supprimé] »)
+
+**Façon Reddit**
+- Rejoindre / quitter une communauté, nombre de membres, onglet « Mon fil » avec ses communautés
+- Icône, bannière et règles pour chaque communauté
+- Tri Hot (algorithme de Reddit) / Nouveaux / Top (jour, semaine, mois, année, toujours)
+- Posts Texte, Image ou Lien ; texte en Markdown avec aperçu
+- Karma sur le profil, onglets Posts / Commentaires / Sauvegardés
+- Sauvegarder un post, copier le lien pour le partager
+- Encadré « Communautés populaires »
 
 **Interface**
-- Design entièrement refait, thème sombre et clair (mémorisé)
+- Mise en page façon Reddit (votes à gauche, barre latérale), thème clair et sombre (mémorisé)
 - Responsive : menu latéral escamotable sur mobile
 - Messages d'erreur clairs en français, notifications au lieu des `alert()`
 - Lecture possible sans compte, écriture réservée aux membres connectés
@@ -69,7 +79,8 @@ Il n'y a **pas de serveur à maintenir** : le frontend parle directement à Supa
 ├── index.html
 ├── public/                 logo, favicon, avatar par défaut
 ├── supabase/
-│   ├── schema.sql          tables, vue, sécurité, stockage (à exécuter une fois)
+│   ├── schema.sql          tables de base, sécurité, stockage (à exécuter en 1er)
+│   ├── reddit-features.sql membres, réponses, votes de commentaires, sauvegardes, karma (2e)
 │   └── seed.sql            communautés de départ (optionnel)
 ├── src/
 │   ├── main.jsx            point d'entrée
@@ -106,8 +117,9 @@ npm install
 
 1. Sur [supabase.com](https://supabase.com), crée un projet (région conseillée : *Paris*).
 2. Ouvre **SQL Editor → New query**, colle le contenu de [`supabase/schema.sql`](supabase/schema.sql) et clique sur **Run**.
-3. *(Optionnel)* Fais de même avec [`supabase/seed.sql`](supabase/seed.sql) pour avoir quelques communautés de départ.
-4. *(Conseillé en développement)* Dans **Authentication → Sign In / Providers → Email**, désactive **Confirm email** pour pouvoir te connecter tout de suite après l'inscription.
+3. Fais de même avec [`supabase/reddit-features.sql`](supabase/reddit-features.sql).
+4. *(Optionnel)* Puis avec [`supabase/seed.sql`](supabase/seed.sql) pour avoir quelques communautés de départ.
+5. *(Conseillé en développement)* Dans **Authentication → Sign In / Providers → Email**, désactive **Confirm email** pour pouvoir te connecter tout de suite après l'inscription.
 
 ### 3. Configurer les variables d'environnement
 
@@ -159,15 +171,17 @@ Chaque `git push` sur la branche principale redéploie le site automatiquement. 
 auth.users (géré par Supabase)
    │ 1
    ▼ 1
-profiles ──────────┐
-   │ créateur      │ auteur
-   ▼               ▼
-subreddits ──1:n── posts ──1:n── comments
-                     │
-                     └──1:n── votes (+1 / -1, un par personne)
+profiles ─────────────┬──────────────┬───────────────┐
+   │ créateur         │ auteur       │ membre        │ sauvegarde
+   ▼                  ▼              ▼               ▼
+subreddits ──1:n──── posts ◄──── memberships     saved_posts
+   ▲                  │  └──1:n── votes (+1 / -1)
+   └──── memberships  └──1:n── comments ──1:n── comments (réponses, parent_id)
+                                   └──1:n── comment_votes
 ```
 
-- **`post_feed`** est une vue qui renvoie chaque post avec le nom de sa communauté, le pseudo de l'auteur, le score et le nombre de commentaires.
+- **`post_feed`** renvoie chaque post avec sa communauté, son auteur, son score, son nombre de commentaires et son score « hot ».
+- **`comment_feed`**, **`subreddit_stats`** (membres, posts) et **`profile_stats`** (karma) font de même pour les commentaires, communautés et profils.
 - Un **trigger** crée automatiquement le profil à l'inscription.
 - Les **règles RLS** permettent à tout le monde de lire, mais seul l'auteur peut modifier ou supprimer son contenu.
 - Les images sont stockées dans le bucket public **`post-images`**, dans un dossier par utilisateur.

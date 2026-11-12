@@ -2,18 +2,24 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deletePost, getMyVotes, getPost } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { useAppData } from '../context/AppDataContext';
 import { useToast } from '../context/ToastContext';
-import { friendlyError, timeAgo } from '../lib/utils';
+import { compactNumber, domainOf, friendlyError } from '../lib/utils';
 import VoteButtons from '../components/VoteButtons';
+import PostMeta from '../components/PostMeta';
+import PostActions from '../components/PostActions';
 import Comments from '../components/Comments';
+import Markdown from '../components/Markdown';
+import JoinButton from '../components/JoinButton';
 import Spinner from '../components/Spinner';
 import { SubIcon } from '../components/Avatar';
-import { IconArrowLeft, IconEdit, IconTrash } from '../components/Icons';
+import { IconArrowLeft, IconExternal } from '../components/Icons';
 import NotFound from './NotFound';
 
 export default function PostPage() {
   const { postId } = useParams();
   const { user } = useAuth();
+  const { subreddits } = useAppData();
   const toast = useToast();
   const navigate = useNavigate();
   const [post, setPost] = useState(undefined);
@@ -35,6 +41,7 @@ export default function PostPage() {
   if (post === null) return <NotFound message="Ce post n'existe pas ou a été supprimé." />;
 
   const isAuthor = user && post.author_id === user.id;
+  const sub = subreddits.find((s) => s.id === post.subreddit_id);
 
   const remove = async () => {
     if (!window.confirm('Supprimer ce post ? C’est définitif.')) return;
@@ -47,67 +54,80 @@ export default function PostPage() {
     }
   };
 
+  const onVote = (value, score) => {
+    setMyVote(value);
+    setPost((p) => ({ ...p, score }));
+  };
+
   return (
-    <div className="page page-narrow">
+    <div className="page">
       <div className="page-main">
         <Link to={`/r/${post.subreddit_name}`} className="back-link">
           <IconArrowLeft size={18} /> r/{post.subreddit_name}
         </Link>
 
-        <article className="card post-full">
-          <header className="post-meta">
-            <Link to={`/r/${post.subreddit_name}`} className="sub-link">
-              <SubIcon name={post.subreddit_name} size={22} /> r/{post.subreddit_name}
-            </Link>
-            <span className="dot">•</span>
-            <span>
-              par{' '}
-              {post.author_username ? (
-                <Link to={`/u/${post.author_username}`}>u/{post.author_username}</Link>
-              ) : (
-                <em>[supprimé]</em>
-              )}
-            </span>
-            <span className="dot">•</span>
-            <time dateTime={post.created_at} title={new Date(post.created_at).toLocaleString('fr-FR')}>
-              {timeAgo(post.created_at)}
-            </time>
-            {post.updated_at && <span className="muted">(modifié)</span>}
-          </header>
+        <article className="card post-card post-full">
+          <div className="post-side">
+            <VoteButtons postId={post.id} score={post.score} myVote={myVote} onChange={onVote} vertical />
+          </div>
+          <div className="post-main">
+            <PostMeta post={post} />
+            <h1 className="post-title-lg">{post.title}</h1>
 
-          <h1 className="post-title-lg">{post.title}</h1>
-          {post.content && <div className="post-body pre-wrap">{post.content}</div>}
-          {post.image_url && (
-            <a href={post.image_url} target="_blank" rel="noreferrer" className="post-image post-image-full">
-              <img src={post.image_url} alt="" />
-            </a>
-          )}
-
-          <footer className="post-actions">
-            <VoteButtons
-              postId={post.id}
-              score={post.score}
-              myVote={myVote}
-              onChange={(value, score) => {
-                setMyVote(value);
-                setPost((p) => ({ ...p, score }));
-              }}
-            />
-            {isAuthor && (
-              <>
-                <Link to={`/post/${post.id}/edit`} className="pill">
-                  <IconEdit size={16} /> Modifier
-                </Link>
-                <button className="pill pill-danger" onClick={remove}>
-                  <IconTrash size={16} /> Supprimer
-                </button>
-              </>
+            {post.url && (
+              <a className="link-preview" href={post.url} target="_blank" rel="noopener noreferrer nofollow">
+                <span className="link-preview-domain">{domainOf(post.url)}</span>
+                <span className="link-preview-url">{post.url}</span>
+                <IconExternal size={16} />
+              </a>
             )}
-          </footer>
+            {post.content && <Markdown text={post.content} className="post-body" />}
+            {post.image_url && (
+              <a href={post.image_url} target="_blank" rel="noreferrer" className="post-image post-image-full">
+                <img src={post.image_url} alt="" />
+              </a>
+            )}
+
+            <PostActions
+              post={post}
+              myVote={myVote}
+              onVote={onVote}
+              onEdit={isAuthor ? true : undefined}
+              onDelete={isAuthor ? remove : undefined}
+            />
+          </div>
         </article>
 
         <Comments postId={post.id} onCountChange={(n) => setPost((p) => ({ ...p, comment_count: n }))} />
       </div>
+
+      <aside className="page-aside">
+        {sub && (
+          <div className="card about-card">
+            <div
+              className="about-banner"
+              style={sub.banner_url ? { backgroundImage: `url("${sub.banner_url}")` } : undefined}
+            />
+            <div className="about-body">
+              <Link to={`/r/${sub.name}`} className="sub-link sub-link-lg">
+                <SubIcon name={sub.name} url={sub.icon_url} size={40} /> r/{sub.name}
+              </Link>
+              <p className="muted">{sub.description || 'Pas de description.'}</p>
+              <div className="stats-row">
+                <div>
+                  <strong>{compactNumber(sub.member_count)}</strong>
+                  <small className="muted">Membres</small>
+                </div>
+                <div>
+                  <strong>{compactNumber(sub.post_count)}</strong>
+                  <small className="muted">Posts</small>
+                </div>
+              </div>
+              <JoinButton sub={sub} />
+            </div>
+          </div>
+        )}
+      </aside>
     </div>
   );
 }
